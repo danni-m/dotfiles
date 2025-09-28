@@ -31,4 +31,4 @@ cd ~/.config
 git clone https://github.com/danni-m/nvim.git
 
 sudo apt-get update && apt-get install -y fzf
-sudo apt install lazygit fd-find
+sudo apt install fd-find
