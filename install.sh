@@ -2,6 +2,6 @@
 
 ./install_nvim.sh
 
-mkdir ~/.config
+mkdir -p ~/.config
 cd ~/.config
 git clone https://github.com/danni-m/nvim.git
