@@ -33,3 +33,5 @@ git clone https://github.com/danni-m/nvim.git
 sudo apt-get update && sudo apt-get install -y python3-venv fd-find
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
+
+cat xterm-ghostty.terminfo | sudo tic -x -
