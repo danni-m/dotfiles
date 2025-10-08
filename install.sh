@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+sudo apt-get update && sudo apt-get install -yy zsh git
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 ./install_nvim.sh
 
 RAW_ARCH=$(uname -m)
