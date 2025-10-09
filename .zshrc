@@ -77,4 +77,4 @@ export PATH
 [ -f ~/.zsh_aliases ] && source ~/.zsh_aliases
 
 # Homebrew
-[ -f /home/linuxbrew/. ] &&  val "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -f /home/linuxbrew/. ] &&  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
