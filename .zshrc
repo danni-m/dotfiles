@@ -72,7 +72,7 @@ add-zsh-hook precmd _load_ssh_agent
 
 
 # Homebrew
-[ -f /home/linuxbrew/. ] &&  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -d /home/linuxbrew/ ] &&  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 
 # Path configurations
