@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 sudo apt-get update && sudo apt-get install -yy zsh git
 
