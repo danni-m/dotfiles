@@ -8,15 +8,17 @@ RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/
 
 RAW_ARCH=$(uname -m)
 
-echo "Detected architecture: $ARCH"
+echo "Detected architecture: $RAW_ARCH"
 
 # Pick correct tar.gz package
 if [[ "$RAW_ARCH" == "x86_64" ]]; then
     ARCH="x86_64"
+    GOARCH="amd64"
 elif [[ "$RAW_ARCH" == "aarch64" ]]; then
     ARCH="arm64"
+    GOARCH="arm64"
 else
-    echo "Unsupported architecture: $ARCH"
+    echo "Unsupported architecture: $RAW_ARCH"
     exit 1
 fi
 
@@ -26,7 +28,8 @@ tar xf lazygit.tar.gz lazygit
 sudo install lazygit -D -t /usr/local/bin/
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-source ~/.zshrc
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
 nvm install node
 npm install -g tree-sitter-cli
 
@@ -38,5 +41,11 @@ popd
 sudo apt-get update && sudo apt-get install -y python3-venv fd-find
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
+
+# Install Go
+GO_VERSION=$(curl -s https://go.dev/dl/?mode=json | \grep -Po '"version": *"go\K[^"]*' | head -1)
+curl -Lo go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-${GOARCH}.tar.gz"
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go.tar.gz
+rm go.tar.gz
 
 cat xterm-ghostty.terminfo | sudo tic -x -
