@@ -76,7 +76,7 @@ add-zsh-hook precmd _load_ssh_agent
 
 
 # Path configurations
-export PATH
+export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
 # Source aliases last
 [ -f ~/.zsh_aliases ] && source ~/.zsh_aliases

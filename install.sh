@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get update && sudo apt-get install -yy zsh git
+sudo apt-get update && sudo apt-get install -yy zsh git python3
 
 RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
@@ -22,7 +22,7 @@ else
     exit 1
 fi
 
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'].lstrip('v'))")
 curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz"
 tar xf lazygit.tar.gz lazygit
 sudo install lazygit -D -t /usr/local/bin/
@@ -33,19 +33,29 @@ export NVM_DIR="$HOME/.nvm"
 nvm install node
 npm install -g tree-sitter-cli
 
-mkdir -p ~/.config
-pushd ~/.config
-git clone https://github.com/danni-m/nvim.git
-popd
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+git -C "$DOTFILES_DIR" submodule init
+git -C "$DOTFILES_DIR" submodule update
+
+sudo mkdir -p ~/.config
+sudo chown "$(id -u):$(id -g)" ~/.config
+ln -sf "$DOTFILES_DIR/nvim" ~/.config/nvim
 
 sudo apt-get update && sudo apt-get install -y python3-venv fd-find
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
 
 # Install Go
-GO_VERSION=$(curl -s https://go.dev/dl/?mode=json | \grep -Po '"version": *"go\K[^"]*' | head -1)
+GO_VERSION=$(curl -s https://go.dev/dl/?mode=json | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['version'].lstrip('go'))")
+if [[ -z "$GO_VERSION" ]]; then
+    echo "Failed to determine Go version"
+    exit 1
+fi
 curl -Lo go.tar.gz "https://go.dev/dl/go${GO_VERSION}.linux-${GOARCH}.tar.gz"
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go.tar.gz
 rm go.tar.gz
+# Add Go to PATH for all shells
+echo 'export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"' >> ~/.zshrc
 
 cat xterm-ghostty.terminfo | sudo tic -x -
